@@ -1,0 +1,17 @@
+library(magrittr)
+library(dplyr)
+mtcars %>%
+  filter(wt > 2) %$%
+  cor.test(hp, mpg)
+
+#> 
+#>  Pearson's product-moment correlation
+#> 
+#> data:  hp and mpg
+#> t = -5.9546, df = 26, p-value = 2.768e-06
+#> alternative hypothesis: true correlation is not equal to 0
+#> 95 percent confidence interval:
+#>  -0.8825498 -0.5393217
+#> sample estimates:
+#>        cor 
+#> -0.7595673
