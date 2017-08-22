@@ -1,0 +1,19 @@
+m<-matrix(2:5,ncol = 2,nrow = 2)
+> m
+     [,1] [,2]
+[1,]    2    4
+[2,]    3    5
+> `dimnames<-`list(c("a",b),c("d","e"))
+Error: unexpected symbol in "`dimnames<-`list"
+> dimnames<-list(c("a",b),c("d","e"))
+Error: object 'b' not found
+> dimnames<-list(c("a","b"),c("d","e"))
+> m
+     [,1] [,2]
+[1,]    2    4
+[2,]    3    5
+> dimnames(m)<-list(c("a","b"),c("d","e"))
+> m
+  d e
+a 2 4
+b 3 5
