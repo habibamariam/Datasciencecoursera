@@ -1,0 +1,46 @@
+x<-c(1+0i,2+4i)
+> x
+[1] 1+0i 2+4i
+> x<-vector("numeric",length = 4)
+> x
+[1] 0 0 0 0
+> y<-c(TRUE,1.2)
+> Y
+Error: object 'Y' not found
+> y
+[1] 1.0 1.2
+> y<-c(1.2,FALSE)
+> y
+[1] 1.2 0.0
+> y<-c("a",1.2)
+> y
+[1] "a"   "1.2"
+> y<-c("a",FALSE)
+> y
+[1] "a"     "FALSE"
+> #explicit coersion
+> x<-0.6
+> class(x)
+[1] "numeric"
+> x<-0:6
+> class(x)
+[1] "integer"
+> as.numeric(x)
+[1] 0 1 2 3 4 5 6
+> x
+[1] 0 1 2 3 4 5 6
+> as.logical(x)
+[1] FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+> as.character(x)
+[1] "0" "1" "2" "3" "4" "5" "6"
+> x<-c("a","c")
+> as.numeric(x)
+[1] NA NA
+Warning message:
+NAs introduced by coercion 
+> as.complex(x)
+[1] NA NA
+Warning message:
+NAs introduced by coercion 
+> as.logical(x)
+[1] NA NA
