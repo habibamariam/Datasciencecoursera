@@ -1,0 +1,10 @@
+summary(nav)
+   Ozone        
+ Mode :logical  
+ FALSE:116      
+ TRUE :37       
+ NA's :0        
+> table(nav)
+nav
+FALSE  TRUE 
+  116    37 
