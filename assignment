@@ -15,3 +15,19 @@ pollutantmean<-function(directory,pollutant,id=1:332){
   return(mean(dat[,pollutant],na.rm = TRUE))
   
 }
+
+function(directory,pollutant,id=1:332){
+  #create a list of files
+  filelist<-list.files(path=directory,pattern=".csv",full.names = TRUE)
+  #create an empty data frame
+  values<-numeric()
+  
+  #loop through the list of files until id is found
+  for(i in id){
+    #read in the file
+    data<- read.csv(filelist[i])
+    #add files to the main data frame
+    values<-c(values,data[[pollutant]])
+  }
+  mean(values,na.rm = TRUE)
+}
