@@ -1,0 +1,106 @@
+<-function(x){}
+> g(2)
+NULL
+> g(g)
+NULL
+> y<-3
+> g(2)
+NULL
+> g<-function(x){
++   a<-3
++   x+a+y
++ }
+> g(2)
+[1] 8
+> x<-as.Date("1970-01-01")
+> x
+[1] "1970-01-01"
+> unclass
+function (x)  .Primitive("unclass")
+> unclass(x)
+[1] 0
+> unclass(as.Date("190-01-04"))
+[1] -650128
+> unclass(as.Date("1970-01-04"))
+[1] 3
+> x
+[1] "1970-01-01"
+> x<-system.time()
+Error in system.time() : argument "expr" is missing, with no default
+Timing stopped at: 0 0 0 
+> x<-Sys.time()
+> x
+[1] "2017-08-31 00:03:58 BST"
+> unclass(x)
+[1] 1504134238
+> x
+[1] "2017-08-31 00:03:58 BST"
+> p<-as.POSIXlt(x)
+> p
+[1] "2017-08-31 00:03:58 BST"
+> unclass(p)
+$sec
+[1] 58.37106
+
+$min
+[1] 3
+
+$hour
+[1] 0
+
+$mday
+[1] 31
+
+$mon
+[1] 7
+
+$year
+[1] 117
+
+$wday
+[1] 4
+
+$yday
+[1] 242
+
+$isdst
+[1] 1
+
+$zone
+[1] "BST"
+
+$gmtoff
+[1] 3600
+
+attr(,"tzone")
+[1] ""    "BST" "BST"
+> names(unclass(p))
+ [1] "sec"    "min"    "hour"   "mday"   "mon"    "year"   "wday"   "yday"  
+ [9] "isdst"  "zone"   "gmtoff"
+> p$sec
+[1] 58.37106
+> p$min
+[1] 3
+> c<-as.POSIXct(x)
+> c
+[1] "2017-08-31 00:03:58 BST"
+> names(unclass(c))
+NULL
+> c
+[1] "2017-08-31 00:03:58 BST"
+> p$sec
+[1] 58.37106
+> x<-list(a=1:5,b=rnorm(10))
+> lapply(x,mean)
+$a
+[1] 3
+
+$b
+[1] -0.0474927
+
+> lapply(x,sd)
+$a
+[1] 1.581139
+
+$b
+[1] 0.6941875
