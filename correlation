@@ -1,0 +1,14 @@
+corr<-function(directory,threshold=0){
+  fileD<-list.files(directory,full.names = TRUE)
+  dat<-vector(mode="numeric",length = 0)
+  for (i in 1:length(fileD)){
+    temp<-read.csv(fileD[i],header=TRUE)
+    temp<-temp[complete.cases(temp),]
+    csum<-nrow(temp)
+    if(csum>threshold){
+      dat<-c(dat,cor(temp$nitrate,temp$sulfate))
+    }
+    
+  }
+  return(dat)
+}
