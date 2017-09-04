@@ -1,0 +1,226 @@
+ x<-matrix(rnorm(200),20,10)
+> rowSums(x,1,sum(2))
+Error in rowSums(x, 1, sum(2)) : invalid 'dims'
+> apply(x,1,quantile,probs=c(0.25,0.75))
+          [,1]      [,2]       [,3]       [,4]      [,5]       [,6]       [,7]       [,8]       [,9]      [,10]      [,11]     [,12]
+25% -0.5730155 0.1304601 -0.6931811 -0.1963933 0.1031581 -0.4359026 -0.6137902 -0.2632504 -0.7661099 -0.5567492 -0.4482569 -0.556736
+75%  0.7490400 1.1156297  0.4464829  0.9159456 1.0902076  0.5184087 -0.3261797  0.7186884  0.6328796  0.9329850  0.4815499  0.513222
+         [,13]      [,14]       [,15]       [,16]     [,17]      [,18]      [,19]      [,20]
+25% -0.6829034 -0.5710151 -0.06671185 -0.05512122 -0.986829 -0.6454988 -0.4555725 -0.7266408
+75%  0.5721070  0.2518209  0.45300817  1.37424764  1.385411  0.2560269  0.3289537  0.8100722
+> apply(x,2,mean)
+ [1]  0.27142905  0.35126353  0.10814107  0.28328297  0.09306151 -0.41551604  0.26011616  0.49015671 -0.29347415  0.12737265
+> apply(x,1,mean)
+ [1]  0.035915841  0.787621686 -0.049336479  0.298580082  0.300030234 -0.017555175 -0.460347369  0.196066569 -0.011310746  0.446072796
+[11] -0.066849506  0.091767333  0.182784368 -0.123421643  0.084222207  0.677493180  0.183104057 -0.107011794  0.001609459  0.102231830
+> apply(x,150,sum)
+Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed
+> apply
+function (X, MARGIN, FUN, ...) 
+{
+    FUN <- match.fun(FUN)
+    dl <- length(dim(X))
+    if (!dl) 
+        stop("dim(X) must have a positive length")
+    if (is.object(X)) 
+        X <- if (dl == 2L) 
+            as.matrix(X)
+        else as.array(X)
+    d <- dim(X)
+    dn <- dimnames(X)
+    ds <- seq_len(dl)
+    if (is.character(MARGIN)) {
+        if (is.null(dnn <- names(dn))) 
+            stop("'X' must have named dimnames")
+        MARGIN <- match(MARGIN, dnn)
+        if (anyNA(MARGIN)) 
+            stop("not all elements of 'MARGIN' are names of dimensions")
+    }
+    s.call <- ds[-MARGIN]
+    s.ans <- ds[MARGIN]
+    d.call <- d[-MARGIN]
+    d.ans <- d[MARGIN]
+    dn.call <- dn[-MARGIN]
+    dn.ans <- dn[MARGIN]
+    d2 <- prod(d.ans)
+    if (d2 == 0L) {
+        newX <- array(vector(typeof(X), 1L), dim = c(prod(d.call), 
+            1L))
+        ans <- forceAndCall(1, FUN, if (length(d.call) < 2L) newX[, 
+            1] else array(newX[, 1L], d.call, dn.call), ...)
+        return(if (is.null(ans)) ans else if (length(d.ans) < 
+            2L) ans[1L][-1L] else array(ans, d.ans, dn.ans))
+    }
+    newX <- aperm(X, c(s.call, s.ans))
+    dim(newX) <- c(prod(d.call), d2)
+    ans <- vector("list", d2)
+    if (length(d.call) < 2L) {
+        if (length(dn.call)) 
+            dimnames(newX) <- c(dn.call, list(NULL))
+        for (i in 1L:d2) {
+            tmp <- forceAndCall(1, FUN, newX[, i], ...)
+            if (!is.null(tmp)) 
+                ans[[i]] <- tmp
+        }
+    }
+    else for (i in 1L:d2) {
+        tmp <- forceAndCall(1, FUN, array(newX[, i], d.call, 
+            dn.call), ...)
+        if (!is.null(tmp)) 
+            ans[[i]] <- tmp
+    }
+    ans.list <- is.recursive(ans[[1L]])
+    l.ans <- length(ans[[1L]])
+    ans.names <- names(ans[[1L]])
+    if (!ans.list) 
+        ans.list <- any(lengths(ans) != l.ans)
+    if (!ans.list && length(ans.names)) {
+        all.same <- vapply(ans, function(x) identical(names(x), 
+            ans.names), NA)
+        if (!all(all.same)) 
+            ans.names <- NULL
+    }
+    len.a <- if (ans.list) 
+        d2
+    else length(ans <- unlist(ans, recursive = FALSE))
+    if (length(MARGIN) == 1L && len.a == d2) {
+        names(ans) <- if (length(dn.ans[[1L]])) 
+            dn.ans[[1L]]
+        ans
+    }
+    else if (len.a == d2) 
+        array(ans, d.ans, dn.ans)
+    else if (len.a && len.a%%d2 == 0L) {
+        if (is.null(dn.ans)) 
+            dn.ans <- vector(mode = "list", length(d.ans))
+        dn1 <- list(ans.names)
+        if (length(dn.call) && !is.null(n1 <- names(dn <- dn.call[1])) && 
+            nzchar(n1) && length(ans.names) == length(dn[[1]])) 
+            names(dn1) <- n1
+        dn.ans <- c(dn1, dn.ans)
+        array(ans, c(len.a%/%d2, d.ans), if (!is.null(names(dn.ans)) || 
+            !all(vapply(dn.ans, is.null, NA))) 
+            dn.ans)
+    }
+    else ans
+}
+<bytecode: 0x00000269203e0878>
+<environment: namespace:base>
+> apply(x,2,mean)
+ [1]  0.27142905  0.35126353  0.10814107  0.28328297  0.09306151 -0.41551604  0.26011616  0.49015671 -0.29347415  0.12737265
+> apply(x,150,mean)
+Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed
+> apply(x,1,sum)
+ [1]  0.35915841  7.87621686 -0.49336479  2.98580082  3.00030234 -0.17555175 -4.60347369  1.96066569 -0.11310746  4.46072796 -0.66849506
+[12]  0.91767333  1.82784368 -1.23421643  0.84222207  6.77493180  1.83104057 -1.07011794  0.01609459  1.02231830
+> apply(x,2,sum)
+ [1]  5.428581  7.025271  2.162821  5.665659  1.861230 -8.310321  5.202323  9.803134 -5.869483  2.547453
+> a<-array(rnorm(2*2*10),c(2*2*10))
+> apply
+function (X, MARGIN, FUN, ...) 
+{
+    FUN <- match.fun(FUN)
+    dl <- length(dim(X))
+    if (!dl) 
+        stop("dim(X) must have a positive length")
+    if (is.object(X)) 
+        X <- if (dl == 2L) 
+            as.matrix(X)
+        else as.array(X)
+    d <- dim(X)
+    dn <- dimnames(X)
+    ds <- seq_len(dl)
+    if (is.character(MARGIN)) {
+        if (is.null(dnn <- names(dn))) 
+            stop("'X' must have named dimnames")
+        MARGIN <- match(MARGIN, dnn)
+        if (anyNA(MARGIN)) 
+            stop("not all elements of 'MARGIN' are names of dimensions")
+    }
+    s.call <- ds[-MARGIN]
+    s.ans <- ds[MARGIN]
+    d.call <- d[-MARGIN]
+    d.ans <- d[MARGIN]
+    dn.call <- dn[-MARGIN]
+    dn.ans <- dn[MARGIN]
+    d2 <- prod(d.ans)
+    if (d2 == 0L) {
+        newX <- array(vector(typeof(X), 1L), dim = c(prod(d.call), 
+            1L))
+        ans <- forceAndCall(1, FUN, if (length(d.call) < 2L) newX[, 
+            1] else array(newX[, 1L], d.call, dn.call), ...)
+        return(if (is.null(ans)) ans else if (length(d.ans) < 
+            2L) ans[1L][-1L] else array(ans, d.ans, dn.ans))
+    }
+    newX <- aperm(X, c(s.call, s.ans))
+    dim(newX) <- c(prod(d.call), d2)
+    ans <- vector("list", d2)
+    if (length(d.call) < 2L) {
+        if (length(dn.call)) 
+            dimnames(newX) <- c(dn.call, list(NULL))
+        for (i in 1L:d2) {
+            tmp <- forceAndCall(1, FUN, newX[, i], ...)
+            if (!is.null(tmp)) 
+                ans[[i]] <- tmp
+        }
+    }
+    else for (i in 1L:d2) {
+        tmp <- forceAndCall(1, FUN, array(newX[, i], d.call, 
+            dn.call), ...)
+        if (!is.null(tmp)) 
+            ans[[i]] <- tmp
+    }
+    ans.list <- is.recursive(ans[[1L]])
+    l.ans <- length(ans[[1L]])
+    ans.names <- names(ans[[1L]])
+    if (!ans.list) 
+        ans.list <- any(lengths(ans) != l.ans)
+    if (!ans.list && length(ans.names)) {
+        all.same <- vapply(ans, function(x) identical(names(x), 
+            ans.names), NA)
+        if (!all(all.same)) 
+            ans.names <- NULL
+    }
+    len.a <- if (ans.list) 
+        d2
+    else length(ans <- unlist(ans, recursive = FALSE))
+    if (length(MARGIN) == 1L && len.a == d2) {
+        names(ans) <- if (length(dn.ans[[1L]])) 
+            dn.ans[[1L]]
+        ans
+    }
+    else if (len.a == d2) 
+        array(ans, d.ans, dn.ans)
+    else if (len.a && len.a%%d2 == 0L) {
+        if (is.null(dn.ans)) 
+            dn.ans <- vector(mode = "list", length(d.ans))
+        dn1 <- list(ans.names)
+        if (length(dn.call) && !is.null(n1 <- names(dn <- dn.call[1])) && 
+            nzchar(n1) && length(ans.names) == length(dn[[1]])) 
+            names(dn1) <- n1
+        dn.ans <- c(dn1, dn.ans)
+        array(ans, c(len.a%/%d2, d.ans), if (!is.null(names(dn.ans)) || 
+            !all(vapply(dn.ans, is.null, NA))) 
+            dn.ans)
+    }
+    else ans
+}
+<bytecode: 0x00000269203e0878>
+<environment: namespace:base>
+> apply(a,c(1,2),mean)
+Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed
+> a<-array(rnorm(2*2*10),c(2,2,10))
+> apply(a,c(1,2),mean)
+            [,1]      [,2]
+[1,] -0.04344007 0.1413473
+[2,] -0.07187675 0.5466810
+> rowMeans(a,dims2)
+Error in rowMeans(a, dims2) : object 'dims2' not found
+> rowMeans(a,dims = 2)
+            [,1]      [,2]
+[1,] -0.04344007 0.1413473
+[2,] -0.07187675 0.5466810
+> rowsum(a)
+Error in rowsum.default(a) : argument "group" is missing, with no default
+> rowsum(a,2)
+Error in
