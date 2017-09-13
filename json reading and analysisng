@@ -1,0 +1,9 @@
+library(jsonlite)
+JsonData<-fromJSON("https://api.github.com/users/jtleek/repos")
+names(JsonData)
+names(JsonData$owner)
+JsonData$owner$login
+myjson<-toJSON(iris,pretty = TRUE)
+myjson
+iris2<-fromJSON(myjson)
+head(iris2)
