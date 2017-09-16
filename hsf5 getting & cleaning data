@@ -1,0 +1,17 @@
+library(rhdf5)
+created<-h5createFile("example5.h5")
+created
+created=h5createGroup("example.h5","habiba")
+created=h5createGroup("example.h5","marium")
+h5ls("example.h5")
+created<-h5createGroup("example.h5","habiba/girl")
+A<-matrix(1:10,nr=5,nc=2)
+h5write(A,"example.h5","habiba/A")
+h5ls("example.h5")
+B<-array(seq(01,2.0,by=0.1),dim=c(5,2,2))
+attr(B,"scale")<-"liter"
+h5write(B,"example.h5","habiba/girl/B")
+h5ls("example.h5")
+readA<-h5read("example.h5","habiba/A")
+h5write(c(12,13,15),"example.h5","habiba/A",index=list(1:3,1))
+h5read("example.h5","habiba/A")
