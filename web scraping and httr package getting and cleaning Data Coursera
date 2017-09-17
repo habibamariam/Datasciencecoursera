@@ -1,0 +1,19 @@
+con=url("https://scholar.google.com/citations?user=HI-I6C0AAAAJ")
+htmlCode=readLines(con)
+close(con)
+htmlCode
+library(XML)
+url2<-"https://scholar.google.com/citations?user=HI-I6C0AAAAJ&hl=en"
+html2<-htmlTreeParse(url2,useInternalNodes = T)
+xpathSApply(html2,"//title",xmlValue)
+
+library(httr);html3=get(url)
+
+
+HTTR Package
+
+url="https://scholar.google.com/citations?user=HI-I6C0AAAAJ"
+library(httr);html2=GET(url)
+content2=content(html2,as="text")
+parsedHtml=htmlParse(content2,asText=TRUE)
+xpathSApply(parsedHtml,"//title",xmlValue)
