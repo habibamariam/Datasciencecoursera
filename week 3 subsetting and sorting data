@@ -1,0 +1,28 @@
+set.seed(12345)
+X<- data.frame("var1"=sample(1:5),"var2"=sample(6:10),"var3"=sample(11:15))
+X<-X[sample(1:5),];X$var2[c(1,3)]=NA
+X[which(X$var3>8),]
+> sort(X$var2)
+[1]  6  7 10
+> sort(X$var2,decreasing = TRUE)
+[1] 10  7  6
+> sort(X$var2,decreasing = TRUE,na.last = TRUE)
+[1] 10  7  6 NA NA
+X[order(X$var1),]
+library(plyr)
+arrange(X,var1)
+arrange(X,desc(var2))
+X$var4<-rnorm(5)
+X<-cbind(rnorm(5),X)
+X
+
+library(reshape2)
+data("mtcars")
+head(mtcars)
+mtcars$carname<-rownames(mtcars)
+carmelt<-melt(mtcars,id=c("carname","gear","cyl"),measure.vars = c("mpg","hp"))
+head(carmelt)
+tail(carmelt)
+cyldata<-dcast(carmelt,cyl~variable)
+cyldata
+
