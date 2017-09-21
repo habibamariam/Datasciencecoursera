@@ -1,0 +1,43 @@
+
+spin<-split(InsectSprays$count,InsectSprays$spray)
+spin
+spincount<-lapply(spin,sum)
+spincount
+
+ spincount$D
+ 
+ library(plyr)
+Warning message:
+package ‘plyr’ was built under R version 3.3.3 
+> ddply(InsectSprays,.(spray),summarize,sum=sum(count))
+
+
+library(reshape2)
+data("mtcars")
+head(mtcars)
+mtcars$carname<-rownames(mtcars)
+carmelt<-melt(mtcars,id=c("carname","gear","cyl"),measure.vars = c("mpg","hp"))
+head(carmelt)
+tail(carmelt)
+cyldata<-dcast(carmelt,cyl~variable)
+cyldata
+
+##select
+names(chicago)
+head(select(chicago,city:dptp))
+head(select(chicago,-(city:dptp)))
+##filter
+chic.f<-filter(chicago,pm25tmean2>30)
+head(chic.f)
+chic.f<-filter(chicago,pm25tmean2>30&tmpd>80)
+##range
+chicago<-arrange(chicago,date)
+chicago
+chicago<-arrange(chicago,desc(date))
+##rename
+chicago<-rename(chicago,pm25=pm25tmean2,dewpoint=dptp)
+head(chicago)
+##mutate
+chicago<-mutate(chicago,pm25detrend=pm25-mean(pm25,na.rm = TRUE))
+head(chicago)
+head(select(chicago,pm25,pm25detrend))
