@@ -1,0 +1,17 @@
+library(jpeg)
+download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg",destfile = "data2/jeff.jpg",mode = "wb")
+picture<-jpeg::readJPEG('data2/jeff.jpg',native = TRUE)
+picture
+quantile(picture,probs = c(0.3,0.8))
+library(data.table)
+FGDP<-data.table::fread('D:/Coursera data Science/Getting and cleaning Data/week 3 dataset/week 3 quiz data2.csv',skip=4,nrows = 190,select = c(1,2,4,5),col.names = c("CountryCode","rank","economy","total"))
+fedstats_country<-data.table::fread("D:/Coursera data Science/Getting and cleaning Data/week 3 dataset/educational data q2 w3.csv")
+mergedDT<-merge(FGDP,fedstats_country,by='CountryCode')
+nrow(mergedDT)
+mergedDT[order(-rank)][13,.(economy)]
+names(mergedDT)
+tapply(mergedDT$rank,mergedDT$`Income Group`,mean)
+library(dplyr)
+breaks<-quantile(mergedDT[,rank],probs = c(0,1,0.2),na.rm = TRUE)
+mergedDT$quantileGDP<-cut(mergedDT[,rank],breaks = breaks)
+mergedDT['Income Group'=="Lower middle income",by= c("income Group","quantileGDP")]
