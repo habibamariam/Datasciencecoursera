@@ -1,0 +1,18 @@
+if(!file.exists("./dataw4")){dir.create("./dataw4")}
+fileURL<-"http://data.baltimorecity.gov/api/views/dz54-2aru/rows.csv?accessType=DOWNLOAD"
+download.file(fileURL,destfile="./dataw4/camera.csv",method="curl")
+cameradata<-read.csv("camera.csv")
+head(cameradata)
+names(cameradata)
+tolower(cameradata)
+tolower(names(cameradata))
+toupper(names(cameradata))
+tolower(names(cameradata))
+splitNames<-strsplit(names(cameradata),"\\.")
+splitNames[[5]]
+grep("Alameda",cameradata$intersection)
+grep("Caton Ave",cameradata$street)
+table(grepl("Alameda",cameradata$intersection))
+cameradata2<-cameradata[!grepl("Alameda",cameradata$intersection),]
+cameradata2
+grep("Alameda",cameradata$intersection,value = TRUE)
